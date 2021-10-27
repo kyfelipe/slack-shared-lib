@@ -6,21 +6,21 @@ import groovy.json.JsonOutput
  * Base Slack Notification class
  */
 class SlackNotification {
-    protected String messageType
+    private String messageType
 
     // Slack variables
-    protected String slackUser
-    protected String slackChannel
-    protected String slackURL
+    private String slackUser
+    private String slackChannel
+    private String slackURL
 
     // Jenkins variables
-    protected Integer jenkinsBuildNumber
-    protected String jenkinsBuildURL
-    protected String jenkinsJobName
-    protected String jenkinsBuildTime
-    protected String jenkinsTestStatus = 'message'
+    private Integer jenkinsBuildNumber
+    private String jenkinsBuildURL
+    private String jenkinsJobName
+    private String jenkinsBuildTime
+    private String jenkinsTestStatus = 'message'
 
-    SlackNotification(String messageType, String slackUser, String slackChannel, String slackURL, Integer jenkinsBuildNumber, String jenkinsBuildURL, String jenkinsJobName, String jenkinsBuildTime) {
+    public SlackNotification(String messageType, String slackUser, String slackChannel, String slackURL, Integer jenkinsBuildNumber, String jenkinsBuildURL, String jenkinsJobName, String jenkinsBuildTime) {
         this.messageType = messageType
         this.slackUser = slackUser
         this.slackChannel = slackChannel
@@ -38,14 +38,15 @@ class SlackNotification {
             attachments: [
                 [
                     color: '#36a64f',
-                    title: 'Success: ${jenkinsJobName} - #${jenkinsBuildNumber} Execution finished after ${jenkinsBuildTime}',
+                    title: "Success: ${jenkinsJobName} - #${jenkinsBuildNumber} Execution finished after ${jenkinsBuildTime}",
+                    icon_emoji: ':slack:',
                     text: jenkinsTestStatus,
                     fallback: "Access your build here: ${jenkinsBuildURL}",
                     actions: [
                         [
                             type: 'button',
                             text: 'Open in Jenkins',
-                            url: "${jenkinsBuildURL}"
+                            url: jenkinsBuildURL
                         ]
                     ]
                 ]
@@ -60,22 +61,23 @@ class SlackNotification {
             attachments: [
                 [
                     color: '#ff0000',
-                    title: 'Failure: ${jobName} - #${buildNumber} Execution finished after ${buildTime}',
+                    title: "Failure: ${jenkinsJobName} - #${jenkinsBuildNumber} Execution finished after ${jenkinsBuildTime}",
+                    icon_emoji: ':slack:',
                     text: jenkinsTestStatus,
                     fallback: "Access your build here: ${jenkinsBuildURL}",
                     actions: [
-                            [
-                                    type: 'button',
-                                    text: 'Open in Jenkins',
-                                    url: "${jenkinsBuildURL}"
-                            ]
+                        [
+                            type: 'button',
+                            text: 'Open in Jenkins',
+                            url: jenkinsBuildURL
+                        ]
                     ]
                 ]
             ]
         ])
     }
 
-    void sendMessage(def steps) {
+    public void sendMessage(def steps) {
         def payload = "$messageType"()
 
         steps.sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"

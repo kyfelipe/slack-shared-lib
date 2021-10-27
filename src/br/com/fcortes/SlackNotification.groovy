@@ -18,7 +18,6 @@ class SlackNotification {
     private String jenkinsBuildURL
     private String jenkinsJobName
     private String jenkinsBuildTime
-    private String jenkinsTestStatus = 'message'
 
     public SlackNotification(String messageType, String slackUser, String slackChannel, String slackURL, Integer jenkinsBuildNumber, String jenkinsBuildURL, String jenkinsJobName, String jenkinsBuildTime) {
         this.messageType = messageType
@@ -38,9 +37,9 @@ class SlackNotification {
             attachments: [
                 [
                     color: '#36a64f',
-                    title: "Success: ${jenkinsJobName} - #${jenkinsBuildNumber} Execution finished after ${jenkinsBuildTime}",
-                    icon_emoji: ':slack:',
-                    text: jenkinsTestStatus,
+                    icon_emoji: ':ghost:',
+                    title: "Success Deploy: ${jenkinsJobName}",
+                    text: "#${jenkinsBuildNumber} Execution finished after ${jenkinsBuildTime}",
                     fallback: "Access your build here: ${jenkinsBuildURL}",
                     actions: [
                         [
@@ -61,9 +60,9 @@ class SlackNotification {
             attachments: [
                 [
                     color: '#ff0000',
-                    title: "Failure: ${jenkinsJobName} - #${jenkinsBuildNumber} Execution finished after ${jenkinsBuildTime}",
-                    icon_emoji: ':slack:',
-                    text: jenkinsTestStatus,
+                    icon_emoji: ':ghost:',
+                    title: "Failure Deploy: ${jenkinsJobName}",
+                    text: "#${jenkinsBuildNumber} Execution finished after ${jenkinsBuildTime}",
                     fallback: "Access your build here: ${jenkinsBuildURL}",
                     actions: [
                         [
